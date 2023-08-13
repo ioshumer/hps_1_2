@@ -143,23 +143,33 @@ def test_find_node():
 
 def test_count_node_and_leafs():
     RootNode = SimpleTreeNode(15, None)
+    Tree = SimpleTree(RootNode)
+    assert Tree.Count() == 0
+    assert Tree.LeafCount() == 1
 
     LeftNode = SimpleTreeNode(7, None)
-    RightNode = SimpleTreeNode(21, None)
-
-    Tree = SimpleTree(RootNode)
     Tree.AddChild(RootNode, LeftNode)
+    assert Tree.Count() == 1
+    assert Tree.LeafCount() == 1
+
+    RightNode = SimpleTreeNode(21, None)
     Tree.AddChild(RootNode, RightNode)
+    assert Tree.Count() == 1
+    assert Tree.LeafCount() == 2
 
     RightNodeA = SimpleTreeNode(19, None)
+    Tree.AddChild(RightNode, RightNodeA)
+    assert Tree.Count() == 2
+    assert Tree.LeafCount() == 2
+
     RightNodeB = SimpleTreeNode(23, None)
+    Tree.AddChild(RightNode, RightNodeB)
+    assert Tree.Count() == 2
+    assert Tree.LeafCount() == 3
 
     RightNodeB_1 = SimpleTreeNode(15, None)
-
-    Tree.AddChild(RightNode, RightNodeA)
-    Tree.AddChild(RightNode, RightNodeB)
-
     Tree.AddChild(RightNodeB, RightNodeB_1)
-
-    assert Tree.Count() == 6
+    assert Tree.Count() == 3
     assert Tree.LeafCount() == 3
+
+

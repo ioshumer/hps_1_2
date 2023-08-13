@@ -118,7 +118,7 @@ class SimpleTree:
     def _Count(self, Node: SimpleTreeNode):
         ChildNodes = Node.Children
         if len(ChildNodes) == 0:
-            return 1
+            return 0
 
         accumulator = 1
 
