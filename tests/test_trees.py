@@ -144,8 +144,8 @@ def test_find_node():
 def test_count_node_and_leafs():
     RootNode = SimpleTreeNode(15, None)
     Tree = SimpleTree(RootNode)
-    assert Tree.Count() == 0
-    assert Tree.LeafCount() == 1
+    assert Tree.Count() == 1
+    assert Tree.LeafCount() == 0
 
     LeftNode = SimpleTreeNode(7, None)
     Tree.AddChild(RootNode, LeftNode)
