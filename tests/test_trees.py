@@ -1,5 +1,3 @@
-import pytest
-
 from src.trees_1 import SimpleTreeNode, SimpleTree
 
 
@@ -48,17 +46,12 @@ def test_traverse_tree():
     Tree.AddChild(RightNodeB, RightNodeB_1)
 
     ethalon = [
-        {RootNode: [
-            {LeftNode: []},
-            {RightNode: [
-                {RightNodeA: []},
-                {RightNodeB: [
-                    {RightNodeB_1: []}
-                ]}
-            ]}
-        ]}
+        RootNode, LeftNode, RightNode,
+        RightNodeA, RightNodeB, RightNodeB_1
     ]
+
     AllNodes = Tree.GetAllNodes()
+
     assert AllNodes == ethalon
 
 
@@ -83,30 +76,13 @@ def test_move_node():
     Tree.AddChild(RightNodeB, RightNodeB_1)
 
     Ethalon = [
-        {RootNode: [
-            {LeftNode: []},
-            {RightNode: [
-                {RightNodeA: []},
-                {RightNodeB: [
-                    {RightNodeB_1: []}
-                ]}
-            ]}
-        ]}
+        RootNode, LeftNode, RightNode, RightNodeA, RightNodeB, RightNodeB_1
     ]
     assert Tree.GetAllNodes() == Ethalon
 
     Tree.MoveNode(RightNodeB, LeftNode)
     MovedEthalon = [
-        {RootNode: [
-            {LeftNode: [
-                {RightNodeB: [
-                    {RightNodeB_1: []}
-                ]}
-            ]},
-            {RightNode: [
-                {RightNodeA: []}
-            ]}
-        ]}
+        RootNode, LeftNode, RightNodeB, RightNodeB_1, RightNode, RightNodeA
     ]
     assert Tree.GetAllNodes() == MovedEthalon
 
@@ -171,5 +147,3 @@ def test_count_node_and_leafs():
     Tree.AddChild(RightNodeB, RightNodeB_1)
     assert Tree.Count() == 6
     assert Tree.LeafCount() == 3
-
-

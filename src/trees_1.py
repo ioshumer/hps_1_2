@@ -6,10 +6,14 @@ class SimpleTreeNode:
         self.Children = []  # список дочерних узлов
 
     def __repr__(self):
-        return f"Node UID: {id(self)}. Value: {self.NodeValue}"
+        return f"(Node UID: {id(self)}. Value: {self.NodeValue})"
 
     def __str__(self):
         return self.__repr__()
+
+    @property
+    def IsLeaf(self):
+        return len(self.Children) == 0
 
 
 class SimpleTree:
@@ -61,26 +65,17 @@ class SimpleTree:
             }
         ]
         """
-        result = self._TraverseTheTree(self.Root)
-        return [result]
-
-    def _TraverseTheTree(self, Node: SimpleTreeNode):
-        ChildNodes = Node.Children
-
-        if len(ChildNodes) == 0:
-            return None
-
         NodesList = []
+        self._TraverseTheTree(self.Root, NodesList)
+        return NodesList
 
-        for ChildNode in ChildNodes:
-            Result = self._TraverseTheTree(ChildNode)
-            if Result is None:
-                StoringValue = {ChildNode: []}
-                NodesList.append(StoringValue)
-            else:
-                NodesList.append(Result)
-
-        return {Node: NodesList}
+    def _TraverseTheTree(self, Node: SimpleTreeNode, NodesList: list):
+        NodesList.append(Node)
+        if Node.IsLeaf:
+            return None
+        else:
+            for ChildNode in Node.Children:
+                self._TraverseTheTree(ChildNode, NodesList)
 
     def FindNodesByValue(self, val):
         # ваш код поиска узлов по значению
@@ -116,16 +111,7 @@ class SimpleTree:
         return result
 
     def _Count(self, Node: SimpleTreeNode):
-        ChildNodes = Node.Children
-        if len(ChildNodes) == 0:
-            return 1
-
-        accumulator = 1
-
-        for ChildNode in ChildNodes:
-            accumulator += self._Count(ChildNode)
-
-        return accumulator
+        return len(self.GetAllNodes())
 
     def LeafCount(self):
         # количество листьев в дереве
