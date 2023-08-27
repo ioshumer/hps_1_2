@@ -9,12 +9,14 @@ def BinarySearchTree():
     (25, "Hello")
         (15, "World")
             (7, "?")
+                (4, "=")
+                (10, "-")
             (17, "*")
+                (16, "&")
+                (20, "#")
         (32, "Amigo")
             (27, "!")
             (35, "...")
-
-    :return:
     """
     Root = BSTNode(25, "Hello", None)
     Bst = BST(Root)
@@ -23,6 +25,12 @@ def BinarySearchTree():
     Bst.AddKeyValue(7, "?")
     Bst.AddKeyValue(17, "*")
 
+    Bst.AddKeyValue(4, "=")
+    Bst.AddKeyValue(10, "-")
+
+    Bst.AddKeyValue(16, "&")
+    Bst.AddKeyValue(20, "#")
+
     Bst.AddKeyValue(32, "Amigo")
     Bst.AddKeyValue(27, "!")
     Bst.AddKeyValue(35, "...")
@@ -30,10 +38,43 @@ def BinarySearchTree():
     return Bst
 
 
+def test_add_node(BinarySearchTree: BST):
+    RootNode = BinarySearchTree.FindNodeByKey(25).Node
+    assert RootNode.NodeKey == 25
+
+    LeftChild_1 = RootNode.LeftChild
+    RightChild_1 = RootNode.RightChild
+    assert LeftChild_1.NodeKey == 15
+    assert RightChild_1.NodeKey == 32
+
+    LeftChild_1_1 = LeftChild_1.LeftChild
+    RightChild_1_1 = LeftChild_1.RightChild
+    assert LeftChild_1_1.NodeKey == 7
+    assert RightChild_1_1.NodeKey == 17
+
+    LeftChild_1_2 = RightChild_1.LeftChild
+    RightChild_1_2 = RightChild_1.RightChild
+    assert LeftChild_1_2.NodeKey == 27
+    assert RightChild_1_2.NodeKey == 35
+
+    LeftChild_1_1_1 = LeftChild_1_1.LeftChild
+    RightChild_1_1_1 = LeftChild_1_1.RightChild
+    assert LeftChild_1_1_1.NodeKey == 4
+    assert RightChild_1_1_1.NodeKey == 10
+
+    LeftChild_1_2_1 = RightChild_1_1.LeftChild
+    RightChild_1_2_1 = RightChild_1_1.RightChild
+    assert LeftChild_1_2_1.NodeKey == 16
+    assert RightChild_1_2_1.NodeKey == 20
+
+
 def test_find(BinarySearchTree: BST):
-    BSTFind_1 = BinarySearchTree.FindNodeByKey(7)
-    assert BSTFind_1.Node.NodeValue == "?"
+    BSTFind_1 = BinarySearchTree.FindNodeByKey(4)
+    assert BSTFind_1.Node.NodeValue == "="
     assert BSTFind_1.NodeHasKey is True
+
+    BSTFind_1_1 = BinarySearchTree.FindNodeByKey(10)
+    assert BSTFind_1_1.NodeHasKey is True
 
     MissedLeftNode_A = BinarySearchTree.FindNodeByKey(1)
     assert MissedLeftNode_A.NodeHasKey is False
@@ -42,8 +83,8 @@ def test_find(BinarySearchTree: BST):
 
     MissedLeftNode_B = BinarySearchTree.FindNodeByKey(8)
     assert MissedLeftNode_B.NodeHasKey is False
-    assert MissedLeftNode_B.ToLeft is False
-    assert MissedLeftNode_B.Node == BSTFind_1.Node
+    assert MissedLeftNode_B.ToLeft is True
+    assert MissedLeftNode_B.Node == BSTFind_1_1.Node
 
     BSTFind_2 = BinarySearchTree.FindNodeByKey(35)
     assert BSTFind_2.Node.NodeValue == "..."
@@ -70,7 +111,7 @@ def test_add(BinarySearchTree: BST):
 
 def test_find_mix_max(BinarySearchTree: BST):
     MinNode_1 = BinarySearchTree.FinMinMax(BinarySearchTree.Root, FindMax=False)
-    assert MinNode_1.NodeKey == 7
+    assert MinNode_1.NodeKey == 4
     MaxNode_1 = BinarySearchTree.FinMinMax(BinarySearchTree.Root, FindMax=True)
     assert MaxNode_1.NodeKey == 35
 
@@ -78,12 +119,12 @@ def test_find_mix_max(BinarySearchTree: BST):
     FirstNode = FirstNodeResult.Node
 
     MinNode_2 = BinarySearchTree.FinMinMax(FirstNode, FindMax=False)
-    assert MinNode_2.NodeKey == 7
+    assert MinNode_2.NodeKey == 4
     MaxNode_2 = BinarySearchTree.FinMinMax(FirstNode, FindMax=True)
-    assert MaxNode_2.NodeKey == 17
+    assert MaxNode_2.NodeKey == 20
 
 
-def test_del_by_key(BinarySearchTree: BST):
+def test_simple_del_by_key(BinarySearchTree: BST):
     NonExistedKey = 33
     result = BinarySearchTree.DeleteNodeByKey(NonExistedKey)
     assert result is False
@@ -110,5 +151,63 @@ def test_del_by_key(BinarySearchTree: BST):
     assert AddedNode.Parent == FindedNode_A
 
 
+def test_del_by_key(BinarySearchTree: BST):
+    """
+    (25, "Hello")
+        (15, "World")
+            (7, "?")
+                (4, "=")
+                (10, "-")
+            (17, "*")
+                (16, "&")
+                (20, "#")
+        (32, "Amigo")
+            (27, "!")
+            (35, "...")
+
+    (25, "Hello")
+        (16, "&")
+            (7, "?")
+                (4, "=")
+                (10, "-")
+            (17, "*")
+                ()
+                (20, "#")
+        (32, "Amigo")
+            (27, "!")
+            (35, "...")
+    """
+    BinarySearchTree.DeleteNodeByKey(15)
+    print(BinarySearchTree)
+
+    RootNode = BinarySearchTree.FindNodeByKey(25).Node
+    assert RootNode.NodeKey == 25
+
+    LeftChild_1 = RootNode.LeftChild
+    RightChild_1 = RootNode.RightChild
+    assert LeftChild_1.NodeKey == 16
+    assert RightChild_1.NodeKey == 32
+
+    LeftChild_1_1 = LeftChild_1.LeftChild
+    RightChild_1_1 = LeftChild_1.RightChild
+    assert LeftChild_1_1.NodeKey == 7
+    assert RightChild_1_1.NodeKey == 17
+
+    LeftChild_1_2 = RightChild_1.LeftChild
+    RightChild_1_2 = RightChild_1.RightChild
+    assert LeftChild_1_2.NodeKey == 27
+    assert RightChild_1_2.NodeKey == 35
+
+    LeftChild_1_1_1 = LeftChild_1_1.LeftChild
+    RightChild_1_1_1 = LeftChild_1_1.RightChild
+    assert LeftChild_1_1_1.NodeKey == 4
+    assert RightChild_1_1_1.NodeKey == 10
+
+    LeftChild_1_2_1 = RightChild_1_1.LeftChild
+    RightChild_1_2_1 = RightChild_1_1.RightChild
+    assert LeftChild_1_2_1 is None
+    assert RightChild_1_2_1.NodeKey == 20
+
+
 def test_count(BinarySearchTree: BST):
-    assert BinarySearchTree.Count() == 7
+    assert BinarySearchTree.Count() == 11

@@ -116,10 +116,10 @@ class BST:
     def _FindSuccessorNode(self, Node: BSTNode):
         if not Node.HasAnyChild:
             return Node
-        if Node.LeftChild is not None:
-            return self._FindSuccessorNode(Node.LeftChild)
         if not Node.HasLeftChild and Node.HasRightChild:
             return Node
+        if Node.HasLeftChild:
+            return self._FindSuccessorNode(Node.LeftChild)
 
     def DeleteNodeByKey(self, key):
         Result = self._FindNodeByKey(self.Root, key)
@@ -132,23 +132,41 @@ class BST:
             self._RemoveNodeFromParent(NodeToDelete)
         elif NodeToDelete.HasBothChildren:
             SuccessorNode = self._FindSuccessorNode(NodeToDelete.RightChild)
+            self._UnbindChildFromParent(SuccessorNode)
+
             if not SuccessorNode.HasLeftChild and SuccessorNode.HasRightChild:
-                self._BindChildToParent(NodeToDelete.RightChild, SuccessorNode.RightChild)
-            self._BindChildToParent(SuccessorNode, NodeToDelete.RightChild, Result.ToLeft)
-            self._BindChildToParent(NodeToDelete.Parent, SuccessorNode, Result.ToLeft)
+                self._BindChildToParent(NodeToDelete.RightChild, SuccessorNode.RightChild, ToLeft=True)
+
+            self._BindChildToParent(SuccessorNode, NodeToDelete.LeftChild, NodeToDelete.LeftChild.IsLeftChild)
+            self._BindChildToParent(SuccessorNode, NodeToDelete.RightChild, NodeToDelete.RightChild.IsLeftChild)
+
+            self._BindChildToParent(NodeToDelete.Parent, SuccessorNode, NodeToDelete.IsLeftChild)
         elif NodeToDelete.HasLeftChild:
             self._BindChildToParent(NodeToDelete.Parent, NodeToDelete.LeftChild, Result.ToLeft)
         elif NodeToDelete.HasRightChild:
             self._BindChildToParent(NodeToDelete.Parent, NodeToDelete.RightChild, Result.ToLeft)
 
-    def _BindChildToParent(self, Parent: BSTNode, Child: BSTNode, ToLeft: bool):
+    def _UnbindChildFromParent(self, UnbindingChild: BSTNode):
+        Parent = UnbindingChild.Parent
+        if Parent is None:
+            return False
+        if Parent.LeftChild == UnbindingChild:
+            Parent.LeftChild = None
+        elif Parent.RightChild == UnbindingChild:
+            Parent.RightChild = None
+        else:
+            return False
+        return True
+
+
+    def _BindChildToParent(self, Parent: BSTNode, NewChild: BSTNode, ToLeft: bool):
         if Parent is None:
             return
         if ToLeft:
-            Parent.LeftChild = Child
+            Parent.LeftChild = NewChild
         else:
-            Parent.RightChild = Child
-        Child.Parent = Parent
+            Parent.RightChild = NewChild
+        NewChild.Parent = Parent
 
     def _RemoveNodeFromParent(self, Node: BSTNode):
         ParentNode = Node.Parent
