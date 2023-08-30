@@ -130,12 +130,14 @@ class BST:
 
         if not NodeToDelete.HasAnyChild:
             self._RemoveNodeFromParent(NodeToDelete)
-        elif NodeToDelete.HasBothChildren:
+        if NodeToDelete.HasBothChildren:
             SuccessorNode = self._FindSuccessorNode(NodeToDelete.RightChild)
             self._UnbindChildFromParent(SuccessorNode)
 
             if not SuccessorNode.HasLeftChild and SuccessorNode.HasRightChild:
-                self._BindChildToParent(NodeToDelete.RightChild, SuccessorNode.RightChild, ToLeft=True)
+                SuccessorParentNode = SuccessorNode.Parent
+                ToLeft = SuccessorParentNode.LeftChild == SuccessorNode
+                self._BindChildToParent(SuccessorParentNode, SuccessorNode.RightChild, ToLeft=ToLeft)
 
             self._BindChildToParent(SuccessorNode, NodeToDelete.LeftChild, NodeToDelete.LeftChild.IsLeftChild)
             self._BindChildToParent(SuccessorNode, NodeToDelete.RightChild, NodeToDelete.RightChild.IsLeftChild)
@@ -157,7 +159,6 @@ class BST:
         else:
             return False
         return True
-
 
     def _BindChildToParent(self, Parent: BSTNode, NewChild: BSTNode, ToLeft: bool):
         if Parent is None:

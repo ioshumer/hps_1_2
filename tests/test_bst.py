@@ -151,6 +151,18 @@ def test_simple_del_by_key(BinarySearchTree: BST):
     assert AddedNode.Parent == FindedNode_A
 
 
+def test_find_successor(BinarySearchTree: BST):
+    Node_32 = BinarySearchTree.FindNodeByKey(32).Node
+    BinarySearchTree.AddKeyValue(28, "...")
+    SuccessorNode = BinarySearchTree._FindSuccessorNode(Node_32)
+    assert SuccessorNode.NodeKey == 27
+
+
+def test_last_node(BinarySearchTree: BST):
+    BinarySearchTree.DeleteNodeByKey(10)
+    print(BinarySearchTree)
+
+
 def test_del_by_key(BinarySearchTree: BST):
     """
     (25, "Hello")
