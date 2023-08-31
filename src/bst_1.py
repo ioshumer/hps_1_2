@@ -233,3 +233,31 @@ class BST:
 
         Counter = 1
         return Counter + self._Count(Node.LeftChild) + self._Count(Node.RightChild)
+
+    def WideAllNodes(self):
+        if self.Root is None:
+            return ()
+        Nodes = [self.Root]
+        NodePointer = 0
+        while NodePointer < len(Nodes):
+            CurrentNode = Nodes[NodePointer]
+            if CurrentNode.HasLeftChild:
+                Nodes.append(CurrentNode.LeftChild)
+            if CurrentNode.HasRightChild:
+                Nodes.append(CurrentNode.RightChild)
+            NodePointer += 1
+        return tuple(Nodes)
+
+    def _DeepAllNodes(self, Node: BSTNode, order):
+        if Node is None:
+            return []
+        if order == 0:
+            return self._DeepAllNodes(Node.LeftChild, order) + [Node] + self._DeepAllNodes(Node.RightChild, order)
+        if order == 1:
+            return self._DeepAllNodes(Node.LeftChild, order) + self._DeepAllNodes(Node.RightChild, order) + [Node]
+        if order == 2:
+            return [Node] + self._DeepAllNodes(Node.LeftChild, order) + self._DeepAllNodes(Node.RightChild, order)
+
+    def DeepAllNodes(self, order):
+        Nodes = self._DeepAllNodes(self.Root, order)
+        return tuple(Nodes)
