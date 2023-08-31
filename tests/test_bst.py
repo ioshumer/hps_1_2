@@ -152,9 +152,9 @@ def test_simple_del_by_key(BinarySearchTree: BST):
 
 
 def test_find_successor(BinarySearchTree: BST):
-    Node_32 = BinarySearchTree.FindNodeByKey(32).Node
+    Node_25 = BinarySearchTree.FindNodeByKey(25).Node
     BinarySearchTree.AddKeyValue(28, "...")
-    SuccessorNode = BinarySearchTree._FindSuccessorNode(Node_32)
+    SuccessorNode = BinarySearchTree._FindSuccessorNode(Node_25)
     assert SuccessorNode.NodeKey == 27
 
 
