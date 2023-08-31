@@ -66,6 +66,11 @@ class BST:
         return result
 
     def _FindNodeByKey(self, CurrentNode: BSTNode, key):
+        if CurrentNode is None:
+            result = BSTFind()
+            result.NodeHasKey = False
+            return result
+
         if CurrentNode.NodeKey == key:
             result = BSTFind()
             result.Node = CurrentNode
@@ -93,13 +98,17 @@ class BST:
         SearchResult = self._FindNodeByKey(self.Root, key)
         if SearchResult.NodeHasKey:
             return False
+
         ParentNode = SearchResult.Node
         NewNode = BSTNode(key, val, ParentNode)
+        if ParentNode is None:
+            self.Root = NewNode
+            return True
+
         if SearchResult.ToLeft:
             ParentNode.LeftChild = NewNode
         else:
             ParentNode.RightChild = NewNode
-        self.Amount += 1
         return True
 
     def FinMinMax(self, FromNode, FindMax):
@@ -108,22 +117,16 @@ class BST:
         return self._FinMinMax(FromNode, FindMax)
 
     def _FinMinMax(self, FromNode, FindMax):
+        if self.Root is None:
+            return
         ChildNode = FromNode.RightChild if FindMax else FromNode.LeftChild
         if ChildNode is None:
             return FromNode
         return self._FinMinMax(ChildNode, FindMax)
 
-    def _FindSuccessorNode(self, Node: BSTNode):
-        if not Node.HasAnyChild:
-            return Node
-        if not Node.HasLeftChild and Node.HasRightChild:
-            return Node
-        if Node.HasLeftChild:
-            return self._FindSuccessorNode(Node.LeftChild)
-
     def _FindSuccessorNode(self, Node: BSTNode) -> BSTNode:
         if not Node.HasAnyChild:
-            return Node
+            return None
 
         if not Node.HasRightChild:
             return Node.LeftChild
@@ -159,8 +162,8 @@ class BST:
         if NodeToDelete == self.Root:
             self.Root = NewNode
 
-        if NewNode == NodeToDelete:
-            self._ChangeChild(NewNode, None)
+        if NewNode is None:
+            self._ChangeChild(NodeToDelete, None)
             return True
 
         if NodeToDelete.RightChild == NewNode:
@@ -185,33 +188,6 @@ class BST:
         self._SetParent(NewNode, NodeToDelete.RightChild)
         self._ChangeChild(NodeToDelete, NewNode)
         return True
-
-    # def DeleteNodeByKey(self, key):
-    #     Result = self._FindNodeByKey(self.Root, key)
-    #     if not Result.NodeHasKey:
-    #         return False
-    #
-    #     NodeToDelete = Result.Node
-    #
-    #     if not NodeToDelete.HasAnyChild:
-    #         self._RemoveNodeFromParent(NodeToDelete)
-    #     if NodeToDelete.HasBothChildren:
-    #         SuccessorNode = self._FindSuccessorNode(NodeToDelete.RightChild)
-    #         self._UnbindChildFromParent(SuccessorNode)
-    #
-    #         if not SuccessorNode.HasLeftChild and SuccessorNode.HasRightChild:
-    #             SuccessorParentNode = SuccessorNode.Parent
-    #             ToLeft = SuccessorParentNode.LeftChild == SuccessorNode
-    #             self._BindChildToParent(SuccessorParentNode, SuccessorNode.RightChild, ToLeft=ToLeft)
-    #
-    #         self._BindChildToParent(SuccessorNode, NodeToDelete.LeftChild, NodeToDelete.LeftChild.IsLeftChild)
-    #         self._BindChildToParent(SuccessorNode, NodeToDelete.RightChild, NodeToDelete.RightChild.IsLeftChild)
-    #
-    #         self._BindChildToParent(NodeToDelete.Parent, SuccessorNode, NodeToDelete.IsLeftChild)
-    #     elif NodeToDelete.HasLeftChild:
-    #         self._BindChildToParent(NodeToDelete.Parent, NodeToDelete.LeftChild, Result.ToLeft)
-    #     elif NodeToDelete.HasRightChild:
-    #         self._BindChildToParent(NodeToDelete.Parent, NodeToDelete.RightChild, Result.ToLeft)
 
     def _UnbindChildFromParent(self, UnbindingChild: BSTNode):
         Parent = UnbindingChild.Parent
@@ -250,9 +226,10 @@ class BST:
         return self._Count(self.Root)
 
     def _Count(self, Node: BSTNode):
-        if not Node.HasAnyChild:
-            return 1
         if Node is None:
             return 0
+        if not Node.HasAnyChild:
+            return 1
+
         Counter = 1
         return Counter + self._Count(Node.LeftChild) + self._Count(Node.RightChild)
