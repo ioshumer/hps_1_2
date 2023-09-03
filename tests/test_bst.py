@@ -3,6 +3,135 @@ import pytest
 from src.bst_1 import BSTNode, BST
 
 
+def _build_tree_from_pattern(pattern: dict, node: BSTNode = None):
+    for key, children in pattern.items():
+        NodeKey = key
+        NodeValue = key
+
+        NewNode = BSTNode(NodeKey, NodeValue, node)
+
+        if children is None:
+            return NewNode
+
+        RightChildKey, RightChildValue = children.popitem()
+        LeftChildKey, LeftChildValue = children.popitem()
+
+        NewNode.LeftChild = _build_tree_from_pattern({LeftChildKey: LeftChildValue}, NewNode)
+        NewNode.RightChild = _build_tree_from_pattern({RightChildKey: RightChildValue}, NewNode)
+
+        return NewNode
+
+
+def build_tree_from_pattern(pattern: dict, node: BSTNode = None) -> BST:
+    RootNode = _build_tree_from_pattern(pattern, node)
+    NewTree = BST(node=RootNode)
+    return NewTree
+
+
+@pytest.fixture(scope="function")
+def empty_tree():
+    EmptyTree = BST(node=None)
+    return EmptyTree
+
+
+@pytest.fixture(scope="function")
+def one_node_tree():
+    pattern = {
+        50: None
+    }
+    bst = build_tree_from_pattern(pattern)
+    return bst
+
+
+@pytest.fixture(scope="function")
+def full_binary_tree_4():
+    pattern = {
+        50: {
+            25: {
+                13: {
+                    7: None,
+                    20: None
+                },
+                37: {
+                    30: None,
+                    45: None
+                }
+            },
+            75: {
+                63: {
+                    55: None,
+                    70: None
+                },
+                88: {
+                    81: None,
+                    95: None
+                }
+            }
+        }
+    }
+    bst = build_tree_from_pattern(pattern)
+    return bst
+
+
+@pytest.fixture(scope="function")
+def strictly_binary_tree_left():
+    """
+    Строгое бинарное дерево (strictly binary tree)
+    Это дерево, каждый узел которого либо лист, либо у него ровно два потомка.
+    """
+    pattern = {
+        50: {
+            25: {
+                13: None,
+                37: None
+            },
+            75: {
+                63: {
+                    55: None,
+                    70: None
+                },
+                88: {
+                    81: None,
+                    95: None
+                }
+            }
+        }
+    }
+    bst = build_tree_from_pattern(pattern)
+    return bst
+
+
+@pytest.fixture(scope="function")
+def strictly_binary_tree_right():
+    """
+    Строгое бинарное дерево (strictly binary tree)
+    Это дерево, каждый узел которого либо лист, либо у него ровно два потомка.
+    """
+    pattern = {
+        50: {
+            25: {
+                13: {
+                    7: None,
+                    20: None
+                },
+                37: {
+                    30: None,
+                    45: None
+                }
+            },
+            75: None
+        }
+    }
+    bst = build_tree_from_pattern(pattern)
+    return bst
+
+
+@pytest.mark.parametrize(
+    "tree_pattern",
+    [
+
+    ]
+)
 @pytest.fixture()
 def BinarySearchTree():
     """
@@ -142,9 +271,6 @@ def test_simple_del_by_key(BinarySearchTree: BST):
     AddedNode = AddedNodeResult.Node
     assert AddedNodeResult.ToLeft is False
 
-    print('*' * 33)
-    print(AddedNode)
-
     FindedNodeResult_A = BinarySearchTree.FindNodeByKey(15)
     FindedNode_A = FindedNodeResult_A.Node
     BinarySearchTree.DeleteNodeByKey(17)
@@ -160,7 +286,6 @@ def test_find_successor(BinarySearchTree: BST):
 
 def test_last_node(BinarySearchTree: BST):
     BinarySearchTree.DeleteNodeByKey(10)
-    print(BinarySearchTree)
 
 
 def test_del_by_key(BinarySearchTree: BST):
@@ -190,7 +315,6 @@ def test_del_by_key(BinarySearchTree: BST):
             (35, "...")
     """
     BinarySearchTree.DeleteNodeByKey(15)
-    print(BinarySearchTree)
 
     RootNode = BinarySearchTree.FindNodeByKey(25).Node
     assert RootNode.NodeKey == 25

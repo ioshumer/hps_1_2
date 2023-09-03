@@ -58,7 +58,6 @@ class BST:
 
     def __init__(self, node):
         self.Root = node  # корень дерева, или None
-        self.Amount = 0
 
     def FindNodeByKey(self, key):
         # ищем в дереве узел и сопутствующую информацию по ключу
