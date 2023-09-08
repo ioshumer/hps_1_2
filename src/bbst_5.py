@@ -26,7 +26,6 @@ def _RecursiveProcessing(SortingArray: list, SortedArray: list, ElementPosition:
     MiddleIndex = ArrayLength // 2
 
     if MiddleIndex == 0:
-        print(SortingArray)
         SortedArray[ElementPosition] = SortingArray[0]
         return
 
@@ -40,9 +39,3 @@ def _RecursiveProcessing(SortingArray: list, SortedArray: list, ElementPosition:
     RightChildPosition = LeftChildPosition + 1
     RightPart = SortingArray[MiddleIndex+1:]
     _RecursiveProcessing(RightPart, SortedArray, RightChildPosition)
-
-
-l1 = [50, 25, 75, 13, 37, 63, 88]
-
-
-print(GenerateBBSTArray(l1))
