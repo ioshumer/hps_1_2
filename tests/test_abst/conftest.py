@@ -2,7 +2,6 @@ import pytest
 
 from src.abst_4 import aBST
 
-
 level_1 = [50]
 level_2 = [50, 25, 75]
 level_3 = [50, 25, 75, 13, 37, 63, 88]
