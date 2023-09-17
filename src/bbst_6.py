@@ -39,7 +39,6 @@ class BalancedBST:
         return LeftBound + Delta
 
     def GenerateTree(self, a):
-        # создаём дерево с нуля из неотсортированного массива a
         ArrayLength = len(a)
         if ArrayLength == 0:
             return
@@ -88,7 +87,20 @@ class BalancedBST:
         return VertexNode
 
     def IsBalanced(self, root_node: BSTNode):
-        return self._GetDepthOfSubtree(root_node)
+        if self.Root is None:
+            return True
+        if root_node.LeftChild is not None:
+            LeftSubtreeDepth = self._GetDepthOfSubtree(root_node.LeftChild)
+        else:
+            LeftSubtreeDepth = 0
+
+        if root_node.RightChild is not None:
+            RightSubtreeDepth = self._GetDepthOfSubtree(root_node.RightChild)
+        else:
+            RightSubtreeDepth = 0
+
+        BalanceSign = abs(LeftSubtreeDepth - RightSubtreeDepth) <= 1
+        return BalanceSign
 
     def _GetDepthOfSubtree(self, Node: BSTNode):
         if Node.IsLeaf:
@@ -105,4 +117,3 @@ class BalancedBST:
             RightChildLevel = self._GetDepthOfSubtree(Node.RightChild)
 
         return max(LeftChildLevel, RightChildLevel)
-

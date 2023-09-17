@@ -39,6 +39,14 @@ def l2_p3():
 
 
 @pytest.fixture(scope="function")
-def empty_bbst():
+def bbst():
     bbst = BalancedBST()
+    return bbst
+
+
+@pytest.fixture(params=list(range(2 ** 10)))
+def filled_bbst(request):
+    tree_size = request.param
+    bbst = BalancedBST()
+    bbst.GenerateTree(list(range(tree_size)))
     return bbst

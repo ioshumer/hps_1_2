@@ -13,7 +13,7 @@ import pytest
         ([13, 25, 50, 63, 75, 88], 3),
     ]
 )
-def test_vertex_calculation(array, expected_idx, empty_bbst):
+def test_vertex_calculation(array, expected_idx, bbst):
     left_bound = 0
     right_bound = len(array) - 1
-    assert empty_bbst._DefineVertexIndex(left_bound, right_bound) == expected_idx
+    assert bbst._DefineVertexIndex(left_bound, right_bound) == expected_idx
