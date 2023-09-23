@@ -41,8 +41,13 @@ class Heap:
         except ValueError:
             return None
 
+    @property
+    def LastIdx(self):
+        EmptyIdx = self.EmptyIdx
+        return self.length - 1 if EmptyIdx is None else EmptyIdx - 1
+
     def CalcDepth(self, depth):
-        return 2**(depth + 1) - 1
+        return 2 ** (depth + 1) - 1
 
     def MakeHeap(self, a, depth):
         # создаём массив кучи HeapArray из заданного
@@ -53,8 +58,67 @@ class Heap:
             self.Add(item)
 
     def GetMax(self):
-        # вернуть значение корня и перестроить кучу
-        return -1  # если куча пуста
+        if self.length == 0:
+            return -1  # если куча пуста
+
+        HeapMaxElem = self.HeapArray[0]
+        HeapLastIdx = self.LastIdx
+
+        if HeapLastIdx == 0:
+            self.HeapArray[0] = None
+            return HeapMaxElem
+
+        HeapLastElem = self.HeapArray[HeapLastIdx]
+        self.HeapArray[HeapLastIdx] = None
+        CurrentIdx = 0
+        self.HeapArray[CurrentIdx] = HeapLastElem
+        self._PushElemDown(HeapLastElem, CurrentIdx)
+
+        return HeapMaxElem
+
+    def _GetIdxOfMaxElem(self, FirstIdx, SecondIdx):
+        if FirstIdx is None:
+            return SecondIdx
+        if SecondIdx is None:
+            return FirstIdx
+        MaxElem = max(self.HeapArray[FirstIdx], self.HeapArray[SecondIdx])
+        return FirstIdx if self.HeapArray[FirstIdx] == MaxElem else SecondIdx
+
+    def _PushElemDown(self, Elem, CurrentIdx):
+        if CurrentIdx is None:
+            return False
+
+        LeftChildIdx = self.GetLeftChildIdx(CurrentIdx)
+        RightChildIdx = self.GetRightChildIdx(CurrentIdx)
+
+        if LeftChildIdx is None and RightChildIdx is None:
+            return False
+
+        LeftChildElem = self.HeapArray[LeftChildIdx]
+        RightChildElem = self.HeapArray[RightChildIdx]
+
+        if LeftChildElem is None and RightChildElem is None:
+            return False
+
+        if RightChildElem is None:
+            IdxOfMaxElem = LeftChildIdx
+            MaxElem = LeftChildElem
+        elif LeftChildElem is None:
+            IdxOfMaxElem = RightChildIdx
+            MaxElem = RightChildElem
+        else:
+            IdxOfMaxElem = self._GetIdxOfMaxElem(LeftChildIdx, RightChildIdx)
+            LeftIsMax = LeftChildIdx == IdxOfMaxElem
+            MaxElem = self.HeapArray[LeftChildIdx] if LeftIsMax else self.HeapArray[LeftChildIdx]
+
+        if MaxElem > Elem:
+            self._SwapNodes(CurrentIdx, IdxOfMaxElem)
+            self.HeapArray[CurrentIdx]
+            return True
+
+        result = self._PushElemDown(Elem, LeftChildIdx)
+        if not result:
+            self._PushElemDown(Elem, RightChildIdx)
 
     def Add(self, key):
         # добавляем новый элемент key в кучу и перестраиваем её
