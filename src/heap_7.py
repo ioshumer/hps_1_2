@@ -5,7 +5,7 @@ class Heap:
 
     @property
     def length(self):
-        return len(self.HeapArray)
+        return len(self.HeapArray) - self.HeapArray.count(None)
 
     def __len__(self):
         return self.length
@@ -44,22 +44,22 @@ class Heap:
     @property
     def LastIdx(self):
         EmptyIdx = self.EmptyIdx
-        return self.length - 1 if EmptyIdx is None else EmptyIdx - 1
-
-    def CalcDepth(self, depth):
-        return 2 ** (depth + 1) - 1
+        return len(self.HeapArray) - 1 if EmptyIdx is None else EmptyIdx - 1
 
     def MakeHeap(self, a, depth):
         # создаём массив кучи HeapArray из заданного
         # размер массива выбираем на основе глубины depth
-        self.HeapArray = [None] * self.CalcDepth(depth)
+        StorageSize = 2 ** (depth + 1) - 1
+        if StorageSize < len(a):
+            return None
+        self.HeapArray = [None] * StorageSize
 
         for item in a:
             self.Add(item)
 
     def GetMax(self):
         if self.length == 0:
-            return -1  # если куча пуста
+            return -1
 
         HeapMaxElem = self.HeapArray[0]
         HeapLastIdx = self.LastIdx
@@ -94,8 +94,8 @@ class Heap:
         if LeftChildIdx is None and RightChildIdx is None:
             return False
 
-        LeftChildElem = self.HeapArray[LeftChildIdx]
-        RightChildElem = self.HeapArray[RightChildIdx]
+        LeftChildElem = None if LeftChildIdx is None else self.HeapArray[LeftChildIdx]
+        RightChildElem = None if RightChildIdx is None else self.HeapArray[RightChildIdx]
 
         if LeftChildElem is None and RightChildElem is None:
             return False
@@ -121,14 +121,14 @@ class Heap:
             self._PushElemDown(Elem, RightChildIdx)
 
     def Add(self, key):
-        # добавляем новый элемент key в кучу и перестраиваем её
         EmptyIdx = self.EmptyIdx
         if EmptyIdx is None:
             return False
         if EmptyIdx == 0:
             self.HeapArray[0] = key
-            return
+            return True
         self._Add(key, EmptyIdx)
+        return True
 
     def _SwapNodes(self, FirstIdx, SecondIdx):
         temp = self.HeapArray[FirstIdx]
@@ -140,7 +140,6 @@ class Heap:
         ParentIdx = self.GetParentIdx(CurrentIdx)
         if ParentIdx is None:
             return
-
         ParentKey = self.HeapArray[ParentIdx]
 
         self.HeapArray[CurrentIdx] = key

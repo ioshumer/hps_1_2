@@ -6,6 +6,7 @@ from src.heap_7 import Heap
 @pytest.mark.parametrize(
     ('initial_array', 'new_array', 'max_elem'),
     [
+        ([], [None] * 7, -1),
         ([30], [None] * 7, 30),
         ([30, 40], [30] + [None] * 6, 40),
         ([30, 40, 50], [40, 30] + [None] * 5, 50),
