@@ -3,6 +3,13 @@ import pytest
 from src.heap_7 import Heap
 
 
+def validate_heap(heap: Heap, idx: int | None = 0):
+    if idx is None:
+        return True
+    LeftChildIdx = Heap.GetLeftChildIdx(idx)
+    RightChildIdx = Heap.GetRightChildIdx(idx)
+
+
 @pytest.mark.parametrize(
     ('array'),
     [
