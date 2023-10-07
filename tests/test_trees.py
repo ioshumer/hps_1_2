@@ -1,4 +1,4 @@
-from src.trees_1 import SimpleTreeNode, SimpleTree
+from src.trees_9 import SimpleTreeNode, SimpleTree
 
 
 def test_appending_node():
@@ -147,3 +147,32 @@ def test_count_node_and_leafs():
     Tree.AddChild(RightNodeB, RightNodeB_1)
     assert Tree.Count() == 6
     assert Tree.LeafCount() == 3
+
+
+def test_event_tree():
+    RootNode = SimpleTreeNode(1, None)
+    Tree = SimpleTree(RootNode)
+
+    A1_Node = SimpleTreeNode(2, RootNode)
+    B1_A1_Node = SimpleTreeNode(5, A1_Node)
+    B2_A1_Node = SimpleTreeNode(7, A1_Node)
+    Tree.AddChild(RootNode, A1_Node)
+    Tree.AddChild(A1_Node, B1_A1_Node)
+    Tree.AddChild(A1_Node, B2_A1_Node)
+
+    A2_Node = SimpleTreeNode(3, RootNode)
+    B1_A2_Node = SimpleTreeNode(4, A2_Node)
+    Tree.AddChild(RootNode, A2_Node)
+    Tree.AddChild(A2_Node, B1_A2_Node)
+
+    A3_Node = SimpleTreeNode(6, RootNode)
+    B1_A3_Node = SimpleTreeNode(8, A3_Node)
+    C1_B1_A3_Node = SimpleTreeNode(9, B1_A3_Node)
+    C2_B1_A3_Node = SimpleTreeNode(10, B1_A3_Node)
+    Tree.AddChild(RootNode, A3_Node)
+    Tree.AddChild(A3_Node, B1_A3_Node)
+    Tree.AddChild(B1_A3_Node, C1_B1_A3_Node)
+    Tree.AddChild(B1_A3_Node, C2_B1_A3_Node)
+
+    even = Tree.EvenTrees()
+    print(Tree)
