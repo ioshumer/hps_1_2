@@ -1,6 +1,6 @@
 import pytest
 
-from src.graph_8 import SimpleGraph, Vertex
+from src.graph_10 import SimpleGraph, Vertex
 
 
 @pytest.fixture(scope="function")
