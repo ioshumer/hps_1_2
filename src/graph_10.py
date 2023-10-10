@@ -44,8 +44,10 @@ class SimpleGraph:
     def IsEdge(self, v1, v2):
         if not self._VertexExists(v1) or not self._VertexExists(v2):
             return False
+
         if self.m_adjacency[v1][v2] == 1 and self.m_adjacency[v2][v1] == 1:
             return True
+
         return False
 
     def AddEdge(self, v1, v2):
@@ -84,7 +86,7 @@ class SimpleGraph:
         if not self._VertexExists(VFrom) or not self._VertexExists(VTo):
             return []
         self._Process(VFrom, VTo)
-        return self.stack
+        return [self.vertex[i] for i in self.stack]
 
     def _Process(self, VFrom: int, VTo: int):
 
