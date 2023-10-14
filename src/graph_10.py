@@ -94,6 +94,7 @@ class SimpleGraph:
     def DepthFirstSearch(self, VFrom: int, VTo: int):
         if not self._VertexExists(VFrom) or not self._VertexExists(VTo):
             return []
+        self._ClearBeforeDeepFirstSearch()
         self._Process(VFrom, VTo)
         return [self.vertex[i] for i in self.stack]
 
@@ -108,8 +109,6 @@ class SimpleGraph:
             if VIdx == VTo:
                 self.stack.append(VIdx)
                 return True
-
-        # for VIdx in AdjacentVertexIndexes:
             if self.vertex[VIdx].Hit is False:
                 WasFound = self._Process(VIdx, VTo)
                 if WasFound:
