@@ -4,6 +4,12 @@ class Vertex:
         self.Value = val
         self.Hit = False
 
+    def __repr__(self):
+        return str(self.Value)
+
+    def __str__(self):
+        return str(self.Value)
+
 
 class SimpleGraph:
 
@@ -72,12 +78,15 @@ class SimpleGraph:
             Item.Hit = False
 
     def _GetAdjacentVertexIndexes(self, VertexIdx: int):
+
         VertexMapping = self.m_adjacency[VertexIdx]
         AdjacentVerteces = []
         IsMappedSign = 1
 
         for Pointer, Value in enumerate(VertexMapping):
-            if Value == IsMappedSign and Pointer != VertexIdx:
+            CurrentVertex = self.vertex[Pointer]
+            WasHit = False if CurrentVertex is None else CurrentVertex.Hit
+            if Value == IsMappedSign and Pointer != VertexIdx and not WasHit:
                 AdjacentVerteces.append(Pointer)
 
         return AdjacentVerteces
@@ -100,7 +109,7 @@ class SimpleGraph:
                 self.stack.append(VIdx)
                 return True
 
-        for VIdx in AdjacentVertexIndexes:
+        # for VIdx in AdjacentVertexIndexes:
             if self.vertex[VIdx].Hit is False:
                 WasFound = self._Process(VIdx, VTo)
                 if WasFound:
@@ -109,4 +118,3 @@ class SimpleGraph:
         self.stack.pop()
 
         return False
-

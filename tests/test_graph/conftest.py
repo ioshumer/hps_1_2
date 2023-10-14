@@ -18,9 +18,7 @@ def empty_simple_graph(graph_size) -> SimpleGraph:
 def full_simple_graph(graph_size) -> SimpleGraph:
     graph = SimpleGraph(graph_size)
     for ctr in range(graph_size):
-        v = Vertex(ctr)
-        v.Value = ctr
-        graph.AddVertex(v)
+        graph.AddVertex(ctr)
     return graph
 
 
