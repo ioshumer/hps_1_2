@@ -34,6 +34,23 @@ class SimpleTree:
         self._RemoveNodeFromParent(NodeToDelete)
         self._RemoveChildrenFromNode(NodeToDelete)
 
+    def GetPathToRoot(self, Node: SimpleTreeNode):
+        if Node is None:
+            return []
+        ListOfNodes = []
+        PathWasFound = self._GetPathToRoot(Node, ListOfNodes)
+        return ListOfNodes if PathWasFound else None
+
+    def _GetPathToRoot(self, Node, ListOfNodes):
+        ListOfNodes.append(Node.NodeValue)
+        ParentNode = Node.Parent
+        if ParentNode is None:
+            if self.Root == Node:
+                return True
+            else:
+                return False
+        return self._GetPathToRoot(ParentNode)
+
     def _RemoveNodeFromParent(self, NodeToDelete: SimpleTreeNode):
         ParentNode = NodeToDelete.Parent
         Node_Index = None
