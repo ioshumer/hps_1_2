@@ -174,7 +174,7 @@ class Vertex:
     def __init__(self, val):
         self.Value = val
         self.Hit = False
-        self.NonWeak = None
+        self.NonWeak = False
 
     def __repr__(self):
         return str(self.Value)
@@ -366,7 +366,7 @@ class SimpleGraph:
             for VertexIdx in range(len(self.vertex)):
                 AdjacentIdxList = self._GetAdjacentIndexes(VertexIdx)
                 for Pointer, CurrentAdjacentIdx in enumerate(AdjacentIdxList):
-                    OtherAdjacentIdx_Set = set(CurrentAdjacentIdx[:Pointer] + CurrentAdjacentIdx[Pointer + 1:])
+                    OtherAdjacentIdx_Set = set(AdjacentIdxList[:Pointer] + AdjacentIdxList[Pointer + 1:])
                     AdjacentOfCurrent_Set = set(self._GetAdjacentIndexes(CurrentAdjacentIdx))
                     IntersectedAdjacentIdx = OtherAdjacentIdx_Set.intersection(AdjacentOfCurrent_Set)
                     if len(IntersectedAdjacentIdx) > 0:
@@ -377,6 +377,9 @@ class SimpleGraph:
             for Vertex in self.vertex:
                 if Vertex.NonWeak is False:
                     WeakList.append(Vertex)
+        except BaseException as e:
+            print(e)
+            raise e
         finally:
             self._UnweakVertices()
             return WeakList
